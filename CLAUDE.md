@@ -32,3 +32,14 @@ Comfortable with SELECT, WHERE, JOIN. Still building fluency with GROUP BY/aggre
 2. Window functions: rank top artist per month, running totals, session/streak detection via LAG/LEAD (gaps-and-islands)
 3. Packaging/viz tool undecided — Power BI is Windows-only and hard to publish, likely something link-shareable instead. Decide once analysis is further along.
 4. Lean into the extended-data fields (skip behavior, platform, session detection) rather than recreating a basic Wrapped clone.
+
+## Ideas for later (narrative/visualization phase — not built yet)
+- Skip-chain finding: fwdbtn-started plays avg ~28.5s vs ~2min for trackdone/clickrow — story is "skip-chains," not generic high skip rate
+- NULL-artist data-quality catch: podcasts/audiobooks have no value in master_metadata_album_artist_name (concept doesn't apply to them); had to filter for a real "top artists" ranking — good data-cleaning narrative for the writeup
+- Top artists by total hours skew bilingual: Luis Miguel, Coldplay, The Chainsmokers, Alejandro Sanz in top 4 — possible angle on Spanish vs. English listening patterns (time of day, platform, mood)
+- 12-year span (2014-2026) enables real multi-year trend analysis, not a single-year snapshot
+
+## Progress log
+- Persisted raw audio history into a real DuckDB file: spotify.duckdb, table audio_history (258,107 rows, confirmed matches original JSON count)
+- Built and debugged first real GROUP BY + aggregate query: top artists by total listening hours (SUM/3600000, WHERE IS NOT NULL, ORDER BY DESC, LIMIT)
+- Next up: window functions (rank per month/year, running totals, session/streak detection via LAG/LEAD)

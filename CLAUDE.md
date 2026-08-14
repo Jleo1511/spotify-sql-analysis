@@ -43,3 +43,23 @@ Comfortable with SELECT, WHERE, JOIN. Still building fluency with GROUP BY/aggre
 - Persisted raw audio history into a real DuckDB file: spotify.duckdb, table audio_history (258,107 rows, confirmed matches original JSON count)
 - Built and debugged first real GROUP BY + aggregate query: top artists by total listening hours (SUM/3600000, WHERE IS NOT NULL, ORDER BY DESC, LIMIT)
 - Next up: window functions (rank per month/year, running totals, session/streak detection via LAG/LEAD)
+
+## Next action item: build a personal cheat sheet
+Not for memorization — for having a trusted reference to copy patterns from
+instead of recalling syntax cold every time. Two parts:
+
+1. Session startup routine (environment mechanics, not SQL):
+   code ~/projects/spotify-sql-analysis
+   # in the integrated terminal:
+   duckdb spotify.duckdb
+
+2. Syntax pattern reference — the *shapes*, not memorized by heart:
+   - GROUP BY + aggregate: SELECT <col>, AGG(<col>) AS <alias> FROM <table>
+     GROUP BY <col> ORDER BY <alias> DESC
+   - Window function: <func>() OVER (PARTITION BY <col> ORDER BY <col> DESC) AS <alias>
+   - Subquery to filter on a window function result: SELECT * FROM (<inner query,
+     no ORDER BY/LIMIT>) AS <alias> WHERE <window_alias> = <value>
+
+Root cause this addresses: most session friction has been environment
+mechanics (which terminal, which folder) and syntax recall, not SQL logic
+itself — he consistently reasons through the logic correctly once broken down.

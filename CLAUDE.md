@@ -3,6 +3,20 @@
 ## What this is
 A hands-on SQL learning project analyzing my own Spotify Extended Streaming History with DuckDB, building toward a portfolio piece for SaaS CS / RevOps / data analyst job applications. Based on learnsql.com's "Spotify Wrapped with SQL" tutorial as a starting point, but going well past it — that tutorial alone is too generic to differentiate on a resume.
 
+## Session startup (run in this order)
+1. Normal terminal: `code ~/projects/spotify-sql-analysis`
+2. VS Code terminal (shell prompt): `pwd`. It must end in `spotify-sql-analysis`. If not: `cd ~/projects/spotify-sql-analysis`
+3. Same terminal: `duckdb spotify.duckdb`
+4. At the `D` prompt, verify the data loaded: `SELECT COUNT(*) FROM audio_history;` Expected: 258107.
+
+**Rules**
+- Prompt starts with `D` (e.g. `spotify D`) = DuckDB: SQL and dot-commands only. Anything ending in `%` = shell (`cd`, `ls`, `git`, `pwd`).
+- Leave DuckDB with `.quit` (no semicolon).
+- SQL statements end with `;`. If the prompt looks frozen, type `;` and press enter (shell commands typed at the `D` prompt get swallowed as unfinished SQL).
+- If step 4 says the table doesn't exist, you're on a blank database: DuckDB silently creates a new empty file when it can't find one. Check `pwd`, then `ls` for `spotify.duckdb`.
+- The row count is the real check. The prompt name alone does not prove you're on the loaded data.
+- Claude gives these startup commands at the start of every new session. Shell commands only; the write-every-query-myself rule still applies to SQL.
+
 ## My SQL level
 Comfortable with SELECT, WHERE, JOIN. Still building fluency with GROUP BY/aggregates and window functions (LAG, LEAD, RANK, running totals) — treat these as active learning areas, not assumed knowledge.
 
@@ -15,7 +29,7 @@ Comfortable with SELECT, WHERE, JOIN. Still building fluency with GROUP BY/aggre
 ## Data
 - Source: Spotify Extended Streaming History export (not the basic one) — full listening history 2014-2026
 - Location: `data/Spotify Extended Streaming History/Streaming_History_Audio_*.json` (also `Streaming_History_Video_*.json`, not yet explored)
-- 258,107 audio play rows total; loaded via `read_json_auto()`, no persisted table yet
+- 258,107 audio play rows total; persisted as the `audio_history` table in `spotify.duckdb` (verified 2026-10-12)
 - Known data quirks:
   - 851 rows with null `master_metadata_track_name`; only 835 explained by podcast (794) + audiobook (41) — 16 unaccounted for, not yet investigated
   - `reason_start` has an empty-string value (not NULL) with 1,383 rows
@@ -48,10 +62,7 @@ Comfortable with SELECT, WHERE, JOIN. Still building fluency with GROUP BY/aggre
 Not for memorization — for having a trusted reference to copy patterns from
 instead of recalling syntax cold every time. Two parts:
 
-1. Session startup routine (environment mechanics, not SQL):
-   code ~/projects/spotify-sql-analysis
-   # in the integrated terminal:
-   duckdb spotify.duckdb
+1. Session startup routine: DONE, see the "Session startup" section near the top of this file.
 
 2. Syntax pattern reference — the *shapes*, not memorized by heart:
    - GROUP BY + aggregate: SELECT <col>, AGG(<col>) AS <alias> FROM <table>

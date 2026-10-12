@@ -71,6 +71,18 @@ instead of recalling syntax cold every time. Two parts:
    - Subquery to filter on a window function result: SELECT * FROM (<inner query,
      no ORDER BY/LIMIT>) AS <alias> WHERE <window_alias> = <value>
 
+   ### GROUP BY vs window function
+   - GROUP BY collapses many rows into one per group
+     (my data: all plays -> one row per artist-year with total hours).
+   - A window function keeps every row and adds a new column computed
+     across related rows (my data: artist_rank, ranking artists within each year).
+   - Chain: total per artist-year first, then rank within each year,
+     then WHERE artist_rank = 1 keeps the top artist per year.
+   - PARTITION BY restarts the ranking per group. Without it there is one
+     ranking over all rows, so rank = 1 returns a single row.
+   - ORDER BY inside OVER decides who gets rank 1. The ORDER BY at the end
+     of the query is what sorts the printed output.
+
 Root cause this addresses: most session friction has been environment
 mechanics (which terminal, which folder) and syntax recall, not SQL logic
 itself — he consistently reasons through the logic correctly once broken down.
